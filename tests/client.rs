@@ -3031,8 +3031,8 @@ mod conn {
         let io = tcp_connect(&addr).await.expect("tcp connect");
         let (mut client, conn) = conn::Builder::new()
             .http2_only(true)
-            .http2_keep_alive_interval(Duration::from_secs(1))
-            .http2_keep_alive_timeout(Duration::from_secs(1))
+            .http2_keep_alive_interval(Duration::from_secs(4))
+            .http2_keep_alive_timeout(Duration::from_secs(4))
             .handshake::<_, Body>(io)
             .await
             .expect("http handshake");

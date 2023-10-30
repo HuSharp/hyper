@@ -70,6 +70,7 @@ pub(super) fn channel(ping_pong: PingPong, config: Config) -> (Recorder, Ponger)
         timer: Box::pin(tokio::time::sleep(interval)),
         state: KeepAliveState::Init,
     });
+    println!("[channel] keep_alive interval is {:?}", keep_alive.as_ref().map(|k| k.interval));
 
     #[cfg(feature = "runtime")]
     let last_read_at = keep_alive.as_ref().map(|_| Instant::now());

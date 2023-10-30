@@ -92,7 +92,7 @@ fn new_builder(config: &Config) -> Builder {
 }
 
 fn new_ping_config(config: &Config) -> ping::Config {
-    ping::Config {
+    let mut p = ping::Config {
         bdp_initial_window: if config.adaptive_window {
             Some(config.initial_stream_window_size)
         } else {
@@ -104,7 +104,15 @@ fn new_ping_config(config: &Config) -> ping::Config {
         keep_alive_timeout: config.keep_alive_timeout,
         #[cfg(feature = "runtime")]
         keep_alive_while_idle: config.keep_alive_while_idle,
+    };
+    if let Some(i) = config.keep_alive_interval {
+        if i > Duration::from_secs(2) {
+            p.keep_alive_interval = Some(i.saturating_sub(Duration::from_secs(2)));
+            println!("[new_ping_config] keep_alive_interval: {:?}", p.keep_alive_interval);
+        }
     }
+    return p;
+
 }
 
 pub(crate) async fn handshake<T, B>(
